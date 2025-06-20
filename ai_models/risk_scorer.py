@@ -1,19 +1,13 @@
-# ai_models/risk_scorer.py
+def calculate_risk_score(density_score, motion_score, pose_score, num_people):
+    """
+    Returns a risk level: Low, Medium, High
+    """
+    if num_people < 3:
+        return "Low"
 
-def calculate_risk_score(density_score, motion_score, fall_detected):
-    score = 0.0
-    if density_score > 0.6:
-        score += 0.5
-    if motion_score > 0.5:
-        score += 0.3
-    if fall_detected:
-        score += 0.2
-
-    if score > 0.6:
-        level = "HIGH"
-    elif score > 0.3:
-        level = "MEDIUM"
+    if density_score > 0.5 or motion_score > 0.4 or pose_score:
+        return "High"
+    elif density_score > 0.3 or motion_score > 0.2:
+        return "Medium"
     else:
-        level = "LOW"
-
-    return round(score, 2), level
+        return "Low"
