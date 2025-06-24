@@ -1,9 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SafeMuster</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+    
 
-        <html><body><script>
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var lat = position.coords.latitude;
-            var lon = position.coords.longitude;
-            fetch("https://localhost:8081/location?lat=" + lat + "&lon=" + lon);
-        });
-        </script><h2>Requesting your location...</h2></body></html>
-        
+        // Auto-fetch user location and send to Flask
+        window.onload = function () {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    fetch(`/location_update?lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
+                });
+            } else {
+                console.log("Geolocation not available.");
+            }
+        };
+    </script>
+</head>
+<body>
+    <h1 class="title">SafeMuster</h1>
+
+    <div class="container">
+        <!-- Left Panel -->
+        <div class="left">
+            <h3>📍 Location</h3>
+            <p>{{ address }}</p>
+
+            <h3>👮 Nearest Police Station</h3>
+            <p>{{ police }}</p>
+        </div>
+
+        <!-- Center Panel (Heatmap / Video) -->
+        <div class="center">
+            <img src="{{ url_for('video_feed') }}" width="720" height="480" alt="Heatmap Feed">
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right">
+            <h3>📈 Risk Level</h3>
+            <p>{{ risk_level }}</p>
+
+            <h3>⚠️ Alert Status</h3>
+            <p>{{ alert_status }}</p>
+        </div>
+    </div>
+
+    <!-- Bottom Panel -->
+    <div class="bottom">
+        <form method="POST" enctype="multipart/form-data" action="/upload_video">
+            <input type="file" name="video" accept="video/*">
+            <button type="submit">Upload Video</button>
+        </form>
+
+        <form method="POST" action="/use_webcam">
+            <button type="submit">Use Webcam</button>
+        </form>
+    </div>
+</body>
+</html>
