@@ -1,0 +1,9 @@
+
+        <html><body><script>
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            fetch("https://localhost:8081/location?lat=" + lat + "&lon=" + lon);
+        });
+        </script><h2>Requesting your location...</h2></body></html>
+        
